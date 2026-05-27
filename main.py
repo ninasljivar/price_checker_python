@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-load_dotenv()
 import requests
 from bs4 import BeautifulSoup
 from tkinter import *
@@ -45,19 +44,17 @@ def check_store(event=None):
     global url
     url = str(url_input.get())
     wanted_price = float(price_input.get())
-    # if "gigatron" in url:
-    #     headers = {
-    #         "User-Agent":"Mozilla/5.0"
-    #     }
-    #     response = requests.get(url, headers=headers)
-    #     soup = BeautifulSoup(response.text, "html.parser")
-    #     print(soup.prettify())
-    #     price_str = soup.find("span", itemprop="price").getText().split(" ")[0].replace(".", "")
-    #     price_str=price_str.replace(",", ".")
-    #     price = float(price_str)
-    #     if price < wanted_price:
-    #         print(f"Your product price went down, check it out! {url}")
-    if "tehnomedia" in url:
+    if "gigatron" in url:
+        headers = {
+            "User-Agent":"CCBot/2.0 (https://commoncrawl.org/faq/)",
+            "Accept-Language":"en-US,en;q=0.5",
+        }
+        response = requests.get(url, headers=headers)
+        soup = BeautifulSoup(response.text, "html.parser")
+        price = float(soup.find(attrs={"itemprop":"price"}).getText().split(" ")[0].replace(".", "").split(",")[0])
+        if price < wanted_price:
+            print(f"Your product price went down, check it out! {url}")
+    elif "tehnomedia" in url:
         response = requests.get(url)
         soup = BeautifulSoup(response.text, "html.parser")
         price_div = soup.find("div", class_="price")
